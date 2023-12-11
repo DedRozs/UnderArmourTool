@@ -1,0 +1,61 @@
+<!-- Topnav -->
+<nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Navbar links -->
+      <ul class="navbar-nav align-items-center col-9 ml-md-auto">
+        <li class="nav-item p-2">
+          <a class="btn btn-neutral" href="/">Home</a>
+        </li>
+        <li class="nav-item p-2">
+          <a class="btn btn-neutral" href="">FAQs</a>
+        </li>
+        <li class="nav-item p-2">
+          <a id="EmailToolButton" class="btn btn-neutral" href="">Email
+            Tool</a>
+        </li>
+      </ul>
+      <!-- End Navbar links -->
+
+      <ul class="navbar-nav align-items-center ml-auto ml-md-0">
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <div class="media align-items-center">
+              <div class="media-body ml-2 d-none d-lg-block">
+                <span class="mb-0 text-sm font-weight-bold">
+                  {{ request.user.first_name }}, Welcome Back!
+                </span>
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-header noti-title">
+              <h6 class="text-overflow m-0">Welcome!</h6>
+            </div>
+            {% if request.user.userprofile.usertype == "Admin" %}
+            <a href="{% url 'admin:index' %}" class="dropdown-item">
+              <i class="ni ni-settings-gear-65"></i>
+              <span>Admin Panel</span>
+            </a>
+            {% endif %}
+            <a href="mailto:customerservice@sportsthread.com?subject=ST Event Directory App: Assistance Required"
+              class="dropdown-item">
+              <i class="ni ni-support-16"></i>
+              <span>Support</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'authentication:logout' %}" class="dropdown-item">
+              <i class="ni ni-user-run"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- End Topnav -->
+<!-- Header -->

@@ -1,0 +1,11 @@
+
+{% autoescape off %}
+Hi,
+
+Thank you for signing up for your Sports Thread CS Tool account! Please click the link below to activate your account:
+
+http://{{ domain }}{% url 'authentication:activate' uidb64=uid token=token %}
+
+{% endautoescape %}
+
+

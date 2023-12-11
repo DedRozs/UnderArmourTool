@@ -1,0 +1,101 @@
+{% extends "layouts/base-fullscreen.html" %} 
+{% block title %} 
+Login 
+{%endblock%}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+
+<!-- Header -->
+<div class="header bg-primary py-7 py-lg-8 pt-lg-9">
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-6 col-md-8 px-5">
+          <h1 class="text-white">Under Armour Under The Lights Dashboard</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- Page content -->
+<div class="container mt--8 pb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <div class="card bg-white border-0 mb-0">
+        <div class="card-header bg-transparent pb-5">
+          <h3 class="text-center">Sign in</h3>
+          <br />
+          <div class="text-muted text-center mt-2 mb-3">
+            {% if msg %}
+            <span class="text-danger">{{ msg | safe }}</span>
+            {% else %}
+            <span> Add your credentials </span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form role="form" method="post" action="">
+            {% csrf_token %}
+
+            <div class="form-group mb-3">
+              <div
+                id="UsernameInput"
+                class="input-group input-group-merge input-group-alternative"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-email-83"></i
+                  ></span>
+                </div>
+                {{ form.username }}
+              </div>
+            </div>
+            <div class="form-group">
+              <div
+                id="PasswordInput"
+                class="input-group input-group-merge input-group-alternative"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-lock-circle-open"></i
+                  ></span>
+                </div>
+                {{ form.password }}
+              </div>
+            </div>
+            <div class="text-center">
+              <button
+                id="SubmitButton"
+                type="submit"
+                name="login"
+                class="btn btn-primary my-4"
+              >
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <a href="{% url 'authentication:password_reset' %}" class="text-neutral">
+            <small><strong>Forgot Password</strong></small>
+          </a>
+        </div>
+
+        <div class="col-6 text-right">
+          <a href="{% url 'authentication:register' %}" class="text-neutral">
+            <small><strong>Create Account</strong></small>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %} {% endblock javascripts %}

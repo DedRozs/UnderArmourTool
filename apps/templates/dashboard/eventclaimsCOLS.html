@@ -1,0 +1,188 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+    <!-- data tables css -->
+    <link rel="stylesheet" href="/static/assets/css/plugins/dataTables.bootstrap5.min.css">
+{% endblock stylesheets %}
+
+{% block content %}
+{% load mathfilters %}
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css">
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Dashboard</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+              </ol>
+            </nav>
+          </div>
+        </div>        
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Event Claims</h3>
+            <p class="text-sm mb-0">
+              This is a full table of all event claims across all events that you have access to.
+            </p>
+          </div>
+
+        
+          <div class="table-responsive py-4 card-body">
+            <table class="table table-flush" id="simpletable">
+              <thead class="thead-light">
+                <tr>
+                  <th>UserID</th>
+                  <th>Name</th>
+                  <th>Parent Name</th>
+                  <th>Event Name</th>
+                  <th>Team Name</th>
+                  <th>Status</th>
+                  <th>Division</th>
+                  <th>League Questions 1</th>
+                  <th>League Questions 2</th>
+                  <th>League Questions 3</th>
+                  <th>League Questions 4</th>
+                  <th>League Questions 5</th>
+                  <th>League Questions 6</th>
+                  <th>League Questions 7</th>
+                  <th>League Questions 8</th>
+                  <th>League Questions 9</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>UserID</th>
+                  <th>Name</th>
+                  <th>Parent Name</th>
+                  <th>Event Name</th>
+                  <th>Team Name</th>
+                  <th>Status</th>
+                  <th>Division</th>
+                  <th>League Questions 1</th>
+                  <th>League Questions 2</th>
+                  <th>League Questions 3</th>
+                  <th>League Questions 4</th>
+                  <th>League Questions 5</th>
+                  <th>League Questions 6</th>
+                  <th>League Questions 7</th>
+                  <th>League Questions 8</th>
+                  <th>League Questions 9</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for claim in eventclaims %}
+                  <tr>
+                    <td>{{claim.user.id}}</td>
+                    <td>{{claim.user.firstName}} {{claim.user.lastName}}</td>
+                    <td>{{claim.user.parent_firstName}} {{claim.user.parent_lastName}}</td>
+                    <td>{{claim.event.name}}</td>
+                    <td>{{claim.team}}</td>
+                    <td>{{claim.status}}</td>
+                    {% if claim.team.division %}
+                    <td>{{claim.team.division}}</td>
+                    {% else %}
+                    <td>None</td>
+                    {% endif %}
+                    {% for question in claim.league_questions.all %}
+                    <td>
+                      {{question.question}}
+                      {% if question.answer %}
+                      <li>{{question.answer}}</li>
+                      {% endif %}
+                      {% if question.document %}
+                      <li>Document: <img src="{{question.document}}" width="50px" height="50px" alt=""></li>
+                      {% endif %}
+                    </td>
+                    {% empty %}
+                    <td colspan="9">No Questions Answered</td>
+                    {% endfor %}
+                    
+                    {% if claim.league_questions.all|length != 0 %}
+                      {% if claim.league_questions.all|length != 9 %}
+                        {% with total=9 length=claim.league_questions.all|length %}
+                          <td colspan="{{total|sub:length}}">{{total|sub:length}}</td>
+                        {% endwith %}
+                      {%endif%}
+                    {%endif%}
+                  
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="16">No Data</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'includes/footer.html' %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<!-- datatable Js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/assets/js/plugins/jquery.dataTables.min.js"></script>
+<script src="/static/assets/js/plugins/dataTables.bootstrap5.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.colVis.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.print.min.js"></script>
+<script src="/static/assets/js/plugins/pdfmake.min.js"></script>
+<script src="/static/assets/js/plugins/jszip.min.js"></script>
+<script src="/static/assets/js/plugins/dataTables.buttons.min.js"></script>
+<script src="/static/assets/js/plugins/vfs_fonts.js"></script>
+<script src="/static/assets/js/plugins/buttons.html5.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.bootstrap5.min.js"></script>
+<script>
+    // Truncate a string
+    function strtrunc(str, max, add){
+      add = add || '...';
+      return (typeof str === 'string' && str.length > max ? str.substring(0, max) + add : str);
+    };
+    // [ Zero Configuration ] start
+    $('#simpletable').dataTable(
+        {
+            pageLength: 25,
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'print'],
+            columnDefs: [
+              {
+                'targets': 2,
+                'render': function(data, type, full, meta){
+                    if(type === 'display'){
+                      data = strtrunc(data, 30);
+                    }
+                  
+                    return data;
+                }
+              }
+            ]
+        }
+    );
+</script>
+
+{% endblock javascripts %}

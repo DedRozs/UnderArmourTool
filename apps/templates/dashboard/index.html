@@ -1,0 +1,156 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+    <!-- data tables css -->
+    <link rel="stylesheet" href="/static/assets/css/plugins/dataTables.bootstrap5.min.css">
+{% endblock stylesheets %}
+
+{% block content %}
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css">
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Dashboard</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+              </ol>
+            </nav>
+          </div>
+        </div>        
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Registrations</h3>
+            <p class="text-sm mb-0">
+              This is a full table of all registrations across all events that you have access to.
+            </p>
+          </div>
+
+        
+          <div class="table-responsive py-4 card-body">
+            <table class="table table-flush" id="simpletable">
+              <thead class="thead-light">
+                <tr>
+                  <th>UserID</th>
+                  <th>Name</th>
+                  <th>Parent Name</th>
+                  <th>Event Claims</th>
+                  <th>Event Name</th>
+                  <th>Team Name</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>UserID</th>
+                  <th>Name</th>
+                  <th>Parent Name</th>
+                  <th>Event Claims</th>
+                  <th>Event Name</th>
+                  <th>Team Name</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for athlete, field in athletes.items %}
+                  <tr>
+                    <td>{{field.userID}}</td>
+                    <td>{{field.userfirstName}} {{field.userlastName}}</td>
+                    <td>{{field.parentfirstName}} {{field.parentlastName}}</td>
+                    
+                    {% for claim in field.eventclaims %}
+                    
+                      {% for key, value in claim.items %}
+                      <td>{{claim.items | length}}</td>
+                      <td>{{value.eventname}}</td>
+                      <td>{{value.teamname}}</td>
+                      <td>{{value.eventclaimstatus}}</td>
+                      <td>{{claim.items}}</td>
+
+                      {% endfor %}
+                    
+                    {%empty%}
+                      <td colspan="1">No Data</td>
+                    {%endfor%}
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan="6">No Data</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'includes/footer.html' %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<!-- datatable Js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/assets/js/plugins/jquery.dataTables.min.js"></script>
+<script src="/static/assets/js/plugins/dataTables.bootstrap5.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.colVis.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.print.min.js"></script>
+<script src="/static/assets/js/plugins/pdfmake.min.js"></script>
+<script src="/static/assets/js/plugins/jszip.min.js"></script>
+<script src="/static/assets/js/plugins/dataTables.buttons.min.js"></script>
+<script src="/static/assets/js/plugins/vfs_fonts.js"></script>
+<script src="/static/assets/js/plugins/buttons.html5.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.bootstrap5.min.js"></script>
+<script>
+    // Truncate a string
+    function strtrunc(str, max, add){
+      add = add || '...';
+      return (typeof str === 'string' && str.length > max ? str.substring(0, max) + add : str);
+    };
+    // [ Zero Configuration ] start
+    $('#simpletable').dataTable(
+        {
+            pageLength: 25,
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'print'],
+            columnDefs: [
+              {
+                'targets': 2,
+                'render': function(data, type, full, meta){
+                    if(type === 'display'){
+                      data = strtrunc(data, 30);
+                    }
+                  
+                    return data;
+                }
+              }
+            ]
+        }
+    );
+</script>
+
+{% endblock javascripts %}

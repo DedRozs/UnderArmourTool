@@ -1,0 +1,165 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Email Tool {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+  h1 {
+      text-align: center;
+      align-items: center;
+  }
+  div.title {
+      text-align: center;
+      align-items: center;
+  }
+  @media screen and (min-width: 601px) {
+      div.title {
+          font-size: 16px;
+          align-items: center;
+      }
+      .a{
+          font-size: 16px;
+          text-align: center;
+          align-items: center;
+      }
+  }
+  @media screen and (max-width: 600px) {
+      div.title {
+          font-size: 12px;
+          align-items: center;
+      }
+      .a{
+          font-size: 12px;
+          text-align: center;
+          align-items: center;
+      }
+  }
+  @media screen and (min-width: 800px) {
+      div.title {
+          font-size: 16px;
+          align-items: center;
+      }
+      .a{
+          font-size: 16px;
+          align-items: center;
+      }
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <!-- Page plugins -->
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css" type="text/css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" type="text/css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css" type="text/css">
+
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+        </div>
+        <!-- Card stats -->
+        <div class="text-left">
+          <h1 style="font-weight:bolder; color: white;">Home</h1>    
+          <div class="row card-wrappertext-center">
+              
+            <div class="col-sm-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="mb-0">Event Claims</h3>
+                  <p class="text-sm mb-0">
+                    This is a full table of all event claims across all events that you have access to.
+                  </p>
+                </div>
+                  <br>
+                  <div class="card-block table-border-style">
+                    <div class="table-responsive py-4">
+                      <table class="table table-flush" id="simpletable">
+                          {% if has_data %}
+                            <thead class="thead-light">
+                              <tr>
+                                <th>User ID</th>
+                                {% for col in Data.columns %}
+                                <th>{{col}}</th>
+                                {%endfor%}
+                              </tr>
+                            </thead>
+                            <tfoot>
+                              <tr>
+                                <th>User ID</th>
+                                {% for col in Data.columns %}
+                                <th>{{col}}</th>
+                                {%endfor%}
+                              </tr>
+                            </tfoot>
+                            <tbody>          
+                              {% for index, row in Data.iterrows %}
+                                <tr>
+                                  <td>{{index}}</td>
+                                  {% for cell in row %}
+                                    <td>
+                                      {% if cell == "nan" or cell == "NaN" or cell == "NaT" or cell == "NAN" or cell == "none" %}
+                                        None
+                                      {% else %}
+                                      {{cell}}
+                                      {% endif %}
+                                    </td>
+                                  {% endfor %}
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          {% else %}
+                          <h1>No Results</h1>
+                          {% endif %}
+                        </table>
+                    </div>
+                  </div>
+
+              </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+  
+
+  {% include 'includes/footer.html' %}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+
+<!-- datatable Js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/assets/js/plugins/jquery.dataTables.min.js"></script>
+<script src="/static/assets/js/plugins/dataTables.bootstrap5.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.colVis.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.print.min.js"></script>
+<script src="/static/assets/js/plugins/pdfmake.min.js"></script>
+<script src="/static/assets/js/plugins/jszip.min.js"></script>
+<script src="/static/assets/js/plugins/dataTables.buttons.min.js"></script>
+<script src="/static/assets/js/plugins/vfs_fonts.js"></script>
+<script src="/static/assets/js/plugins/buttons.html5.min.js"></script>
+<script src="/static/assets/js/plugins/buttons.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+    $('#simpletable').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ]
+    } );
+} );
+</script>
+{% endblock javascripts %}
