@@ -98,9 +98,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': f'{BASE_DIR}/db.sqlite3',
-    }
+       'ENGINE': 'django.db.backends.mysql',
+       'NAME': env('RDS_DB_NAME'),
+       'USER': env('RDS_DB_USER'),
+       'PASSWORD': env('RDS_DB_PASSWORD'),
+       'HOST': env('RDS_DB_HOST'),
+       'PORT': env('RDS_DB_PORT'),
+    },
 }
 EXTERNAL_DB_HOSTNAME = config('EXTERNAL_DB_HOSTNAME', default='')
 EXTERNAL_DB_USERNAME = config('EXTERNAL_DB_USERNAME', default='')
